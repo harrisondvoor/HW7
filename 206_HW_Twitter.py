@@ -68,12 +68,12 @@ api = tweepy.API(auth, parser=tweepy.parsers.JSONParser())
 #### Recommended order of tasks: ####
 ## 1. Set up the caching pattern start -- the dictionary and the try/except 
 ## 		statement shown in class.
-CACHE_FNAME = "206_HW7_Twitter_cache.json"
+CACHE_FNAME = "206_HW7_Twitter_cache.json" #creating and naming cache file
 try:
-    cache_file = open(CACHE_FNAME, 'r')
-    cache_contents = cache_file.read()
-    cache_file.close()
-    CACHE_DICTIONARY = json.loads(cache_contents)
+    cache_file = open(CACHE_FNAME, 'r') #attempting to read data from the file
+    cache_contents = cache_file.read() #if it can read data from the file, it converts the data to a string
+    cache_file.close() #closing the file
+    CACHE_DICTIONARY = json.loads(cache_contents) #adding data to cache dictionary
 except:
     CACHE_DICTIONARY = {}
 
@@ -83,19 +83,19 @@ except:
 ## 		so it either gets new data or caches data, depending upon what the input 
 ##		to search for is. 
 def get_twitter_data(x):
-    if x in CACHE_DICTIONARY:
-        print ('using cache')
-        return CACHE_DICTIONARY[x]
+    if x in CACHE_DICTIONARY: 
+        print ('using cache') #using cache file if it's already cached in the cache dictionary
+        return CACHE_DICTIONARY[x] #return the dictionary correlated to whatever term 'x' is searched 
     else:
-        print ('fetching')
+        print ('fetching') #if not already cached in the cache dictionary, 
         api = tweepy.API(auth, parser=tweepy.parsers.JSONParser())
         tweets = api.search(x)
-        twitter_data = {}
+        twitter_data = {} #create empty dictionary called twitter_data
         for tweet in tweets['statuses']:
             twitter_data[tweet['text']] = tweet['created_at']
-        CACHE_DICTIONARY[x] = twitter_data
+        CACHE_DICTIONARY[x] = twitter_data #adding a dictionary to the already existing cache_dictionary
         write_file = open(CACHE_FNAME, 'w')
-        write_file.write(json.dumps(CACHE_DICTIONARY))
+        write_file.write(json.dumps(CACHE_DICTIONARY)) #writing the cache_dictionary to the cache file 206_HW7_Twitter_cache.json
         write_file.close()
     return twitter_data
 
@@ -107,14 +107,13 @@ def get_twitter_data(x):
 ##		text of each tweet in the big nested structure -- write code to print out 
 ## 		content from 5 tweets, as shown in the linked example.
 
-my_input = input("Enter tweet term: ")
+my_input = input("Enter tweet term: ") #creating the input in which I will search for a specific term on Twitter
 my_data = get_twitter_data(my_input)
 t = 0
-for y in my_data.keys():
-    if (t < 5):
-        print ('TEXT: ' + y)
-        print ('CREATED AT: ' + my_data[y])
-        print ('\n')
+for y in my_data.keys(): #looping through the keys of my_data
+        print ('TEXT: ' + y) #printing the text and the associated key
+        print ('CREATED AT: ' + my_data[y]) #printing when the tweet was created, and its associated value
+        print ('\n') #new line
         t += 1
 
 
