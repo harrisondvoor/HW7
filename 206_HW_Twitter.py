@@ -2,6 +2,7 @@ import unittest
 import tweepy
 import requests
 import json
+from pprint import pprint
 
 
 ## SI 206 - HW
@@ -83,17 +84,15 @@ except:
 ##		to search for is. 
 def get_twitter_data(x):
     if x in CACHE_DICTIONARY:
-        print ('using cache...'))
+        print ('using cache')
         return CACHE_DICTIONARY[x]
     else:
-        print ('fetching...')
+        print ('fetching')
         api = tweepy.API(auth, parser=tweepy.parsers.JSONParser())
-        tweets = api.home_timeline()
+        tweets = api.search(x)
         twitter_data = {}
-        for tweet in tweets:
-            w = tweet['text'].split(' ')
-            if x in w:
-                twitter_data[tweet['text']] = tweet['created_at']
+        for tweet in tweets['statuses']:
+            twitter_data[tweet['text']] = tweet['created_at']
         CACHE_DICTIONARY[x] = twitter_data
         write_file = open(CACHE_FNAME, 'w')
         write_file.write(json.dumps(CACHE_DICTIONARY))
@@ -108,16 +107,14 @@ def get_twitter_data(x):
 ##		text of each tweet in the big nested structure -- write code to print out 
 ## 		content from 5 tweets, as shown in the linked example.
 
-for x in range(0,3):
-    term = input("Enter tweet term: ")
-    my_data = get_twitter_data(x)
-    my_file = open(CACHE_FNAME, 'r')
-    json_data = json.load(my_file)
-    t = 0
-    for y in json_data[x].keys():
-        lst = list(json_data[x].values())[t]
+my_input = input("Enter tweet term: ")
+my_data = get_twitter_data(my_input)
+t = 0
+for y in my_data.keys():
+    if (t < 5):
         print ('TEXT: ' + y)
-        print('CREATED AT: ' + lst + '\n')
+        print ('CREATED AT: ' + my_data[y])
+        print ('\n')
         t += 1
 
 
