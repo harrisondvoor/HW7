@@ -111,10 +111,12 @@ my_input = input("Enter tweet term: ") #creating the input in which I will searc
 my_data = get_twitter_data(my_input)
 t = 0
 for y in my_data.keys(): #looping through the keys of my_data
+    if (t < 5):
         print ('TEXT: ' + y) #printing the text and the associated key
         print ('CREATED AT: ' + my_data[y]) #printing when the tweet was created, and its associated value
         print ('\n') #new line
         t += 1
+
 
 
 
